@@ -1,0 +1,9 @@
+FROM php:7.3-fpm
+
+RUN apt-get update && apt-get install
+RUN docker-php-ext-install mbstring tokenizer mysqli pdo_mysql
+
+ADD ./default.ini /usr/local/etc/php/conf.d/default.ini
+
+
+WORKDIR /app
