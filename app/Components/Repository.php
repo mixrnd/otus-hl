@@ -41,7 +41,7 @@ abstract class Repository
             $query->bindValue(':' . $name, $value);
         }
         $query->execute();
-        var_dump($query->errorInfo());
+
         return $this->connection()->lastInsertId();
     }
 

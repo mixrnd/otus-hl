@@ -15,14 +15,13 @@ class UserRepository extends Repository
 {
     public function registerUser($name, $secondName, $age, $interests, $city, $gender, $password)
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
+
         $user = $this->findByName($name);
         if ($user) {
             return ['success' => false, 'errorMsg' => 'Пользователь с таким именем уже есть'];
         }
 
-        $res = $this->insert('users', [
+        $this->insert('users', [
             'name' => $name,
             'second_name' => $secondName,
             'age' => $age,
@@ -32,7 +31,7 @@ class UserRepository extends Repository
             'gender' => $gender,
         ]);
         
-        var_dump($res);die;
+
         return ['success' => true, 'errorMsg' => ''];
     }
 
