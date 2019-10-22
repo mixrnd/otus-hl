@@ -46,6 +46,7 @@ class AuthController extends Controller
                 $this->request->get('gender'),
                 $this->request->get('password')
             );
+            var_dump($result);die;
             if ($result['success']) {
                 $this->redirect('/login');
             } else {
