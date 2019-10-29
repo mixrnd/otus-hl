@@ -12,4 +12,6 @@ return [
     'index' => new Route('/', ['_controller' => \App\Controllers\HomeController::class, '_action' => 'index']),
     'list' => new Route('/list', ['_controller' => \App\Controllers\HomeController::class, '_action' => 'list']),
     'user' => new Route('/user', ['_controller' => \App\Controllers\HomeController::class, '_action' => 'user']),
+
+    'search' => new Route('/search', ['_controller' => \App\Controllers\SearchController::class, '_action' => 'index']),
 ];

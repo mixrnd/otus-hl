@@ -24,6 +24,7 @@ abstract class Repository
     public function selectClass(string $sql, $className, array $params = [])
     {
         $query = $this->connection()->prepare($sql);
+
         $query->setFetchMode(\PDO::FETCH_CLASS, $className);
         $query->execute($params);
         return $query->fetchAll();
@@ -41,7 +42,7 @@ abstract class Repository
             $query->bindValue(':' . $name, $value);
         }
         $query->execute();
-
+        //var_dump($query->errorInfo());
         return $this->connection()->lastInsertId();
     }
 

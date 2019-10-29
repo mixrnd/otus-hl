@@ -13,31 +13,54 @@ use App\Components\Repository;
 
 class UserRepository extends Repository
 {
-    public function registerUser($name, $secondName, $age, $interests, $city, $gender, $password)
+    public function registerUser($email, $name, $secondName, $age, $interests, $city, $gender, $password)
     {
 
-        $user = $this->findByName($name);
+        $user = $this->findByEmail($email);
         if ($user) {
-            return ['success' => false, 'errorMsg' => 'Пользователь с таким именем уже есть'];
+            return ['success' => false, 'errorMsg' => 'Пользователь с таким email уже есть'];
         }
 
+        $this->insertUser($email, $name, $secondName, $age, $interests, $city, $gender, $password);
+
+        return ['success' => true, 'errorMsg' => ''];
+    }
+
+    public function insertUser($email, $name, $secondName, $age, $interests, $city, $gender, $password)
+    {
         $this->insert('users', [
+            'email' => $email,
             'name' => $name,
             'second_name' => $secondName,
             'age' => $age,
             'interests' => $interests,
             'city' => $city,
-            'password' => $password,
+            'password' => password_hash($password, PASSWORD_ARGON2I),
             'gender' => $gender,
         ]);
-        
+    }
 
-        return ['success' => true, 'errorMsg' => ''];
+    public function search($namePart, $lastNamePart)
+    {
+        return $this->selectClass("select * from users where name like :name or second_name like :secondname", User::class, [
+            ':name' => $namePart . '%',
+            ':secondname' => $lastNamePart . '%'
+        ]);
     }
 
     public function findByName($userName): ?User
     {
         $result = $this->selectClass('select * from users where name=:name', User::class, [':name' => $userName]);
+
+        if (!$result) {
+            return null;
+        }
+        return $result[0];
+    }
+
+    public function findByEmail($email): ?User
+    {
+        $result = $this->selectClass('select * from users where email=:email', User::class, [':email' => $email]);
 
         if (!$result) {
             return null;

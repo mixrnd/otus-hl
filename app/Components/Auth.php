@@ -28,11 +28,13 @@ class Auth
         $this->session = $session;
     }
 
-    public function login($name, $password) : bool
+    public function login($email, $password) : bool
     {
         $userRepo = new UserRepository();
-        $user = $userRepo->findByName($name);
-        if ($password == $user->password) {
+
+        $user = $userRepo->findByEmail($email);
+
+        if ($r = password_verify($password, $user->password)) {
             $this->session->set('auth_user', $user);
             return true;
         } else {

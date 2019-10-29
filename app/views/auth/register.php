@@ -11,6 +11,11 @@
         <?php } ?>
         <form method="post" action="/register">
             <div class="row">
+                <label for="email" class="sr-only">Имя</label>
+                <input  id="email" class="form-control" name="email" placeholder="email" value="<?= $request->get('email')?>">
+            </div>
+
+            <div class="row">
                 <label for="name" class="sr-only">Имя</label>
                 <input  id="name" class="form-control" name="name" placeholder="имя" value="<?= $request->get('name')?>">
             </div>

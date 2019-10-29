@@ -21,7 +21,7 @@ class AuthController extends Controller
     {
         $error = '';
         if ($this->request->isMethod('post')) {
-            if ($this->auth->login($this->request->get('name'), $this->request->get('password'))) {
+            if ($this->auth->login($this->request->get('email'), $this->request->get('password'))) {
                 $this->redirect('/');
             } else {
                 $error = 'Неправильный логин или пароль';
@@ -38,6 +38,7 @@ class AuthController extends Controller
             $userRepo = new UserRepository();
 
             $result = $userRepo->registerUser(
+                $this->request->get('email'),
                 $this->request->get('name'),
                 $this->request->get('second_name'),
                 $this->request->get('age'),

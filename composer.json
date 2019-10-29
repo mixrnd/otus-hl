@@ -1,7 +1,8 @@
 {
     "require": {
         "symfony/http-foundation": "^4.3",
-        "symfony/routing": "^4.3"
+        "symfony/routing": "^4.3",
+        "fzaninotto/faker": "^1.8"
     },
     "autoload": {
       "psr-4": {
