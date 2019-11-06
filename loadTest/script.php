@@ -1,29 +1,38 @@
 <?php
 
-$resultsLatency = [];
-$resultsThroughput  = [];
-foreach ([2, 10, 30, 50, 100 ] as $connectionNumber) {
-    $l = `wrk -c$connectionNumber http://sn.in:8080/search?firstName=On`;
-    preg_match('/Latency\s+(\d*.\d*)([a-z]+)/', $l, $m);
-    $rpsValue = (float)$m[1];
-    $rpsMesurment = $m[2];
-    if ($rpsMesurment === 's') {
-        $rpsValue *= 1000;
-    }
-    $resultsLatency[] = $connectionNumber . ' ' . $rpsValue;
+function loadTest($graphPrefix)
+{
 
-    preg_match('/Transfer\/sec:\s+(\d+.\d+)/', $l, $t);
-    $throughput = $t[1];
-    $resultsThroughput[] = $connectionNumber . ' ' . $throughput;
-    echo $l . PHP_EOL;
-    echo '----------------------------------' . PHP_EOL;
-    sleep(5);
+    $resultsLatency = [];
+    $resultsThroughput = [];
+    foreach ([1, 10, 30, 50, 80, 100] as $connectionNumber) {
+        $l = `wrk -c$connectionNumber -t1 --timeout 30s 'http://sn.in:8080/searchfirstName=Mia&lastName=Hena'`;
+        preg_match('/Latency\s+(\d*.\d*)([a-z]+)/', $l, $m);
+        $rpsValue = (float)$m[1];
+        $rpsMesurment = $m[2];
+        if ($rpsMesurment === 's') {
+            $rpsValue *= 1000;
+        }
+        $resultsLatency[] = $connectionNumber . ' ' . $rpsValue;
+
+        preg_match('/Requests\/sec:\s+(\d+.\d+)/', $l, $t);
+        $throughput = $t[1];
+        $resultsThroughput[] = $connectionNumber . ' ' . $throughput;
+        echo $l . PHP_EOL;
+        echo '----------------------------------' . PHP_EOL;
+        sleep(10);
+    }
+
+
+    file_put_contents('latency.dat', implode(PHP_EOL, $resultsLatency));
+    file_put_contents('throughtput.dat', implode(PHP_EOL, $resultsThroughput));
+
+    `gnuplot -e "set terminal png size 800,800; set output '{$graphPrefix}_latancy.png'; set xlabel 'query number'; set ylabel 'response time'; plot 'latency.dat' with lines;"`;
+    `gnuplot -e "set terminal png size 800,800; set output '{$graphPrefix}_throughtput.png'; set xlabel 'qery number'; set ylabel 'rps'; plot 'throughtput.dat' with lines;"`;
 }
 
-//var_dump($resultsLatency);die;
+//loadTest('before');
+loadTest('after');
 
-file_put_contents('latency.dat', implode(PHP_EOL, $resultsLatency));
-file_put_contents('throughtput.dat', implode(PHP_EOL, $resultsThroughput));
 
-`gnuplot -e "set terminal png size 400,300; set output 'l.png'; set xlabel 'rps'; set ylabel 'response time'; plot 'latency.dat' with lines;"`;
-`gnuplot -e "set terminal png size 400,300; set output 't.png'; set xlabel 'rps'; set ylabel 'MB'; plot 'throughtput.dat' with lines;"`;
+

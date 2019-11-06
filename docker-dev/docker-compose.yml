@@ -34,7 +34,8 @@ services:
       - "8080:80"
 
   db:
-    image: mysql:8.0
+    build:
+      context: ./mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_DATABASE: social_network

@@ -42,7 +42,7 @@ class UserRepository extends Repository
 
     public function search($namePart, $lastNamePart)
     {
-        return $this->selectClass("select * from users where name like :name or second_name like :secondname", User::class, [
+        return $this->selectClass("select * from users where name like :name or second_name like :secondname limit 1000", User::class, [
             ':name' => $namePart . '%',
             ':secondname' => $lastNamePart . '%'
         ]);
