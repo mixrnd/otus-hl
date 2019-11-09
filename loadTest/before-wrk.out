@@ -1,0 +1,54 @@
+Running 10s test @ http://sn.in:8080/search?firstName=Mia&lastName=Hena
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   620.00ms   16.89ms 650.78ms   62.50%
+    Req/Sec     1.00      0.00     1.00    100.00%
+  16 requests in 10.03s, 70.94KB read
+Requests/sec:      1.60
+Transfer/sec:      7.08KB
+
+Running 10s test @ http://sn.in:8080/search?firstName=Mia&lastName=Hena
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.36s   632.18ms   3.23s    81.58%
+    Req/Sec     5.41      4.55    19.00     94.12%
+  38 requests in 10.04s, 168.51KB read
+Requests/sec:      3.79
+Transfer/sec:     16.79KB
+
+Running 10s test @ http://sn.in:8080/search?firstName=Mia&lastName=Hena
+  1 threads and 30 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.01s     2.50s    8.40s    55.56%
+    Req/Sec     6.25      6.18    30.00     92.86%
+  36 requests in 10.04s, 159.63KB read
+Requests/sec:      3.59
+Transfer/sec:     15.90KB
+
+Running 10s test @ http://sn.in:8080/search?firstName=Mia&lastName=Hena
+  1 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.69s     2.36s    9.86s    54.84%
+    Req/Sec     7.20      6.93    29.00     76.00%
+  31 requests in 10.07s, 137.48KB read
+Requests/sec:      3.08
+Transfer/sec:     13.65KB
+
+Running 10s test @ http://sn.in:8080/search?firstName=Mia&lastName=Hena
+  1 threads and 80 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.61s     2.27s    9.74s    60.00%
+    Req/Sec    10.32      8.53    30.00     56.00%
+  35 requests in 10.09s, 155.20KB read
+Requests/sec:      3.47
+Transfer/sec:     15.38KB
+
+Running 10s test @ http://sn.in:8080/search?firstName=Mia&lastName=Hena
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.69s   193.96ms   9.97s    75.00%
+    Req/Sec     4.00      4.58     9.00     66.67%
+  4 requests in 10.11s, 17.74KB read
+Requests/sec:      0.40
+Transfer/sec:      1.76KB
+

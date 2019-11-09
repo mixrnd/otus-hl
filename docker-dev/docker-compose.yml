@@ -34,13 +34,14 @@ services:
       - "8080:80"
 
   db:
-    build:
-      context: ./mysql
+    image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_DATABASE: social_network
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - ./mysql:/etc/mysql/conf.d
     ports:
       - "3306:3306"

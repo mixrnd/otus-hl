@@ -5,8 +5,9 @@ function loadTest($graphPrefix)
 
     $resultsLatency = [];
     $resultsThroughput = [];
+    $outputBuffer = '';
     foreach ([1, 10, 30, 50, 80, 100] as $connectionNumber) {
-        $l = `wrk -c$connectionNumber -t1 --timeout 30s 'http://sn.in:8080/searchfirstName=Mia&lastName=Hena'`;
+        $l = `wrk -c$connectionNumber -t1 --timeout 300s 'http://sn.in:8080/search?firstName=Mia&lastName=Hena'`;
         preg_match('/Latency\s+(\d*.\d*)([a-z]+)/', $l, $m);
         $rpsValue = (float)$m[1];
         $rpsMesurment = $m[2];
@@ -20,10 +21,11 @@ function loadTest($graphPrefix)
         $resultsThroughput[] = $connectionNumber . ' ' . $throughput;
         echo $l . PHP_EOL;
         echo '----------------------------------' . PHP_EOL;
+        $outputBuffer .= $l . PHP_EOL;
         sleep(10);
     }
 
-
+    file_put_contents("$graphPrefix-wrk.out", $outputBuffer);
     file_put_contents('latency.dat', implode(PHP_EOL, $resultsLatency));
     file_put_contents('throughtput.dat', implode(PHP_EOL, $resultsThroughput));
 
