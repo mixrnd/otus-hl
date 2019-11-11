@@ -20,8 +20,19 @@ class SearchController extends Controller
         $lastNamePart = $this->request->get('lastName');
 
         $repo = new UserRepository();
+        $repo->setUseReplica(true);
 
         return $this->view('search/index', ['users' => $repo->search($firstNamePart, $lastNamePart)]);
 
+    }
+
+    public function city()
+    {
+        $city = $this->request->get('name');
+
+        $repo = new UserRepository();
+        $repo->setUseReplica(true);
+
+        return $this->view('search/index', ['users' => $repo->searchByCity($city)]);
     }
 }

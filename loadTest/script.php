@@ -2,12 +2,11 @@
 
 function loadTest($graphPrefix)
 {
-
     $resultsLatency = [];
     $resultsThroughput = [];
     $outputBuffer = '';
     foreach ([1, 10, 30, 50, 80, 100] as $connectionNumber) {
-        $l = `wrk -c$connectionNumber -t1 --timeout 300s 'http://sn.in:8080/search?firstName=Mia&lastName=Hena'`;
+        $l = `wrk -c$connectionNumber -t1 -s query.lua 'http://sn.in:8080'`;
         preg_match('/Latency\s+(\d*.\d*)([a-z]+)/', $l, $m);
         $rpsValue = (float)$m[1];
         $rpsMesurment = $m[2];

@@ -12,6 +12,9 @@ namespace App\Components;
 abstract class Repository
 {
     protected $connectionName = 'db';
+    protected $connectionNameReplica = 'db_replica';
+
+    private $useReplica = false;
 
     private static $connections;
     private static $config;
@@ -53,15 +56,33 @@ abstract class Repository
 
     protected function connection() : \PDO
     {
-        if (!isset(self::$connections[$this->connectionName])) {
-            self::$connections[$this->connectionName] = $this->createConnection(self::$config[$this->connectionName]);
+        $connectionName = $this->useReplica ? $this->connectionNameReplica: $this->connectionName;
+
+        if (!isset(self::$connections[$connectionName])) {
+            self::$connections[$connectionName] = $this->createConnection(self::$config[$connectionName]);
         }
 
-        return self::$connections[$this->connectionName];
+        return self::$connections[$connectionName];
     }
 
     private function createConnection($dbConfigItem)
     {
         return new \PDO($dbConfigItem['connectionString'], $dbConfigItem['user'], $dbConfigItem['password']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUseReplica(): bool
+    {
+        return $this->useReplica;
+    }
+
+    /**
+     * @param bool $useReplica
+     */
+    public function setUseReplica(bool $useReplica): void
+    {
+        $this->useReplica = $useReplica;
     }
 }

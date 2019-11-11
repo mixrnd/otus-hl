@@ -82,4 +82,11 @@ class UserRepository extends Repository
     {
         return $this->selectClass('select * from users', User::class);
     }
+
+    public function searchByCity($city)
+    {
+        return $this->selectClass("select * from users where city like :city limit 1000", User::class, [
+            ':city' => $city . '%',
+        ]);
+    }
 }

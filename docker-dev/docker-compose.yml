@@ -11,6 +11,7 @@ services:
       - ./../:/app
     depends_on:
       - db
+      - db-slave
 
   php-cli:
     env_file:
@@ -45,3 +46,20 @@ services:
       - ./mysql:/etc/mysql/conf.d
     ports:
       - "3306:3306"
+#    entrypoint: /bin/bash -x /etc/mysql/conf.d/init.sh
+
+
+  db-slave:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: social_network
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - ./mysql-slave:/etc/mysql/conf.d
+    ports:
+      - "3307:3306"
+    depends_on:
+      - db

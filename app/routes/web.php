@@ -14,4 +14,5 @@ return [
     'user' => new Route('/user', ['_controller' => \App\Controllers\HomeController::class, '_action' => 'user']),
 
     'search' => new Route('/search', ['_controller' => \App\Controllers\SearchController::class, '_action' => 'index']),
+    'search_city' => new Route('/search/city', ['_controller' => \App\Controllers\SearchController::class, '_action' => 'city']),
 ];
