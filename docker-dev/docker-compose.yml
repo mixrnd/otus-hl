@@ -10,8 +10,9 @@ services:
     volumes:
       - ./../:/app
     depends_on:
-      - db
-      - db-slave
+      - master
+      - slave-1
+      - slave-2
 
   php-cli:
     env_file:
@@ -34,32 +35,42 @@ services:
     ports:
       - "8080:80"
 
-  db:
-    image: mysql:8.0
+  master:
+    build:
+      context: ./db/master
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_DATABASE: social_network
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: secret
-    volumes:
-      - ./mysql:/etc/mysql/conf.d
     ports:
       - "3306:3306"
-#    entrypoint: /bin/bash -x /etc/mysql/conf.d/init.sh
 
-
-  db-slave:
-    image: mysql:8.0
+  slave-1:
+    build:
+      context: ./db/slave1
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_DATABASE: social_network
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: secret
-    volumes:
-      - ./mysql-slave:/etc/mysql/conf.d
     ports:
       - "3307:3306"
     depends_on:
-      - db
+      - master
+
+  slave-2:
+    build:
+      context: ./db/slave2
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: social_network
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3308:3306"
+    depends_on:
+      - master

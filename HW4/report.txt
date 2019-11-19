@@ -1,0 +1,275 @@
+1. Настроить 2 слейва и 1 мастер
+добавил в докер композ файл ещё один сервис с базой и повторил действия из предыдущего ДЗ
+
+2. Включаем row-based репликацию.
+проверил на мастере и слейве show variables like "binlog_format"; ответ был везде одинаковый
+
+mysql> show variables like "binlog_format";
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| binlog_format | ROW   |
++---------------+-------+
+1 row in set (0.07 sec)
+
+3. Включить GTID.
+https://dev.mysql.com/doc/refman/8.0/en/replication-gtids-howto.html отсюда взял параметры и добавил в конфиги
+
+gtid_mode=ON
+enforce-gtid-consistency=ON
+
+
+на мастере
+show master status ;
++------------------+----------+--------------+------------------+-------------------------------------------+
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set                         |
++------------------+----------+--------------+------------------+-------------------------------------------+
+| mysql-bin.000003 |      877 |              |                  | e9ba1c6b-0939-11ea-a655-0242ac130003:1-12 |
++------------------+----------+--------------+------------------+-------------------------------------------+
+1 row in set (0.00 sec)
+
+на первом слейве
+show slave status\G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: master
+                  Master_User: slave_user
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: mysql-bin.000003
+          Read_Master_Log_Pos: 877
+               Relay_Log_File: b912e73d30e4-relay-bin.000004
+                Relay_Log_Pos: 456
+        Relay_Master_Log_File: mysql-bin.000003
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB:
+          Replicate_Ignore_DB:
+           Replicate_Do_Table:
+       Replicate_Ignore_Table:
+      Replicate_Wild_Do_Table:
+  Replicate_Wild_Ignore_Table:
+                   Last_Errno: 0
+                   Last_Error:
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 877
+              Relay_Log_Space: 1607
+              Until_Condition: None
+               Until_Log_File:
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: Yes
+           Master_SSL_CA_File:
+           Master_SSL_CA_Path:
+              Master_SSL_Cert:
+            Master_SSL_Cipher:
+               Master_SSL_Key:
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error:
+               Last_SQL_Errno: 0
+               Last_SQL_Error:
+  Replicate_Ignore_Server_Ids:
+             Master_Server_Id: 1
+                  Master_UUID: e9ba1c6b-0939-11ea-a655-0242ac130003
+             Master_Info_File: mysql.slave_master_info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for more updates
+           Master_Retry_Count: 86400
+                  Master_Bind:
+      Last_IO_Error_Timestamp:
+     Last_SQL_Error_Timestamp:
+               Master_SSL_Crl:
+           Master_SSL_Crlpath:
+           Retrieved_Gtid_Set: e9ba1c6b-0939-11ea-a655-0242ac130003:1-12
+            Executed_Gtid_Set: e9b08159-0939-11ea-8985-0242ac130005:1-11,
+e9ba1c6b-0939-11ea-a655-0242ac130003:1-12
+                Auto_Position: 1
+         Replicate_Rewrite_DB:
+                 Channel_Name:
+           Master_TLS_Version:
+       Master_public_key_path:
+        Get_master_public_key: 0
+
+на вротом слейве
+
+show slave status\G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: master
+                  Master_User: slave_user
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: mysql-bin.000003
+          Read_Master_Log_Pos: 877
+               Relay_Log_File: 181502bf3471-relay-bin.000004
+                Relay_Log_Pos: 456
+        Relay_Master_Log_File: mysql-bin.000003
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB:
+          Replicate_Ignore_DB:
+           Replicate_Do_Table:
+       Replicate_Ignore_Table:
+      Replicate_Wild_Do_Table:
+  Replicate_Wild_Ignore_Table:
+                   Last_Errno: 0
+                   Last_Error:
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 877
+              Relay_Log_Space: 1607
+              Until_Condition: None
+               Until_Log_File:
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: Yes
+           Master_SSL_CA_File:
+           Master_SSL_CA_Path:
+              Master_SSL_Cert:
+            Master_SSL_Cipher:
+               Master_SSL_Key:
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error:
+               Last_SQL_Errno: 0
+               Last_SQL_Error:
+  Replicate_Ignore_Server_Ids:
+             Master_Server_Id: 1
+                  Master_UUID: e9ba1c6b-0939-11ea-a655-0242ac130003
+             Master_Info_File: mysql.slave_master_info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for more updates
+           Master_Retry_Count: 86400
+                  Master_Bind:
+      Last_IO_Error_Timestamp:
+     Last_SQL_Error_Timestamp:
+               Master_SSL_Crl:
+           Master_SSL_Crlpath:
+           Retrieved_Gtid_Set: e9ba1c6b-0939-11ea-a655-0242ac130003:1-12
+            Executed_Gtid_Set: e9ba1c6b-0939-11ea-a655-0242ac130003:1-12,
+e9e8151d-0939-11ea-8056-0242ac130004:1-11
+                Auto_Position: 1
+         Replicate_Rewrite_DB:
+                 Channel_Name:
+           Master_TLS_Version:
+       Master_public_key_path:
+        Get_master_public_key: 0
+
+
+
+
+4. Настроить полусинхронную репликацию.
+https://dev.mysql.com/doc/refman/8.0/en/replication-semisync-installation.html делал по этой инструкции
+
+проверял как там написано, запросом
+SELECT PLUGIN_NAME, PLUGIN_STATUS
+       FROM INFORMATION_SCHEMA.PLUGINS
+       WHERE PLUGIN_NAME LIKE '%semi%';
+
+
+
+5. Создать нагрузку на запись в любую тестовую таблицу. На стороне, которой нагружаем считать, сколько строк мы успешно записали.
+script.php заносит в базу числа по порядку
+выводит кол-во успешных заросов, ошибок и послденее записанное число
+
+
+6. С помощью kill -9 убиваем мастер MySQL.
+сделал  docker stop docker-dev_master_1_70b095479431
+потом убедился что, при помощи вызова, docker ps что этот контейнер не запущен
+Results
+success: 273
+errors: 4727
+last number 5000
+
+
+7. Заканчиваем нагрузку на запись.
+скрипт сам закончил работу
+
+8. Выбираем самый свежий слейв. Промоутим его до мастера. Переключаем на него второй слейв.
+
+смотрел в каком слейве самое большое значение в таблце
+select max(number) from test_table4;
+в моём случае оба показали одинаковое значение
++-------------+
+| max(number) |
++-------------+
+|         272 |
++-------------+
+выбрал первый слейв, для того чтобы его сделать мастером
+на втором слейве сделал
+stop slave;
+CHANGE MASTER TO MASTER_HOST='slave-1', MASTER_PORT=3306, MASTER_USER='slave_user', MASTER_PASSWORD='secret', MASTER_AUTO_POSITION=1, MASTER_SSL=1;
+start slave;
+
+show slave status\G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: slave-1
+                  Master_User: slave_user
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: mysql-bin.000004
+          Read_Master_Log_Pos: 3923944
+               Relay_Log_File: 181502bf3471-relay-bin.000005
+                Relay_Log_Pos: 456
+        Relay_Master_Log_File: mysql-bin.000004
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB:
+          Replicate_Ignore_DB:
+           Replicate_Do_Table:
+       Replicate_Ignore_Table:
+      Replicate_Wild_Do_Table:
+  Replicate_Wild_Ignore_Table:
+                   Last_Errno: 0
+                   Last_Error:
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 3923944
+              Relay_Log_Space: 972
+              Until_Condition: None
+               Until_Log_File:
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: Yes
+           Master_SSL_CA_File:
+           Master_SSL_CA_Path:
+              Master_SSL_Cert:
+            Master_SSL_Cipher:
+               Master_SSL_Key:
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error:
+               Last_SQL_Errno: 0
+               Last_SQL_Error:
+  Replicate_Ignore_Server_Ids:
+             Master_Server_Id: 2
+                  Master_UUID: e9b08159-0939-11ea-8985-0242ac130005
+             Master_Info_File: mysql.slave_master_info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for more updates
+           Master_Retry_Count: 86400
+                  Master_Bind:
+      Last_IO_Error_Timestamp:
+     Last_SQL_Error_Timestamp:
+               Master_SSL_Crl:
+           Master_SSL_Crlpath:
+           Retrieved_Gtid_Set: e9b08159-0939-11ea-8985-0242ac130005:1-11
+            Executed_Gtid_Set: e9b08159-0939-11ea-8985-0242ac130005:1-11,
+e9ba1c6b-0939-11ea-a655-0242ac130003:1-12390,
+e9e8151d-0939-11ea-8056-0242ac130004:1-13
+                Auto_Position: 1
+         Replicate_Rewrite_DB:
+                 Channel_Name:
+           Master_TLS_Version:
+       Master_public_key_path:
+        Get_master_public_key: 0
+
+вставил в новый мастер, убедился что есть на слейве
+
+
+9. Проверяем, есть ли потери транзакций.
+запустил новый тест, ещё раз проверил максимальные значение, значения и там и там одинаковые
+

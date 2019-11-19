@@ -4,6 +4,7 @@ use Symfony\Component\Routing\Route;
 
 return [
     'test' => new Route('/test', ['_controller' => \App\Controllers\TestController::class, '_action' => 'test']),
+    'test_insert' => new Route('/test/insert', ['_controller' => \App\Controllers\TestController::class, '_action' => 'insert']),
 
     'login' => new Route('/login', ['_controller' => \App\Controllers\AuthController::class, '_action' => 'login']),
     'logout' => new Route('/logout', ['_controller' => \App\Controllers\AuthController::class, '_action' => 'logout']),

@@ -10,6 +10,7 @@ namespace App\Controllers;
 
 
 use App\Components\Controller;
+use App\Models\TestTableRepository;
 
 class TestController extends Controller
 {
@@ -20,5 +21,15 @@ class TestController extends Controller
 //        var_dump($this->session->get('auth_user'));
 //        var_dump($this->request->getPathInfo());
         echo 'ho';
+    }
+
+    public function insert()
+    {
+        $number = $this->request->get('number');
+
+        $testRepo = new TestTableRepository();
+        $testRepo->insertNumber($number);
+
+        echo 'ok'; die;
     }
 }
