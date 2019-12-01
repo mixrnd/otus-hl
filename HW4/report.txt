@@ -158,8 +158,6 @@ e9e8151d-0939-11ea-8056-0242ac130004:1-11
         Get_master_public_key: 0
 
 
-
-
 4. Настроить полусинхронную репликацию.
 https://dev.mysql.com/doc/refman/8.0/en/replication-semisync-installation.html делал по этой инструкции
 

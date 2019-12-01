@@ -16,4 +16,9 @@ return [
 
     'search' => new Route('/search', ['_controller' => \App\Controllers\SearchController::class, '_action' => 'index']),
     'search_city' => new Route('/search/city', ['_controller' => \App\Controllers\SearchController::class, '_action' => 'city']),
+
+    'dialogs_list' => new Route('/dialogs/list', ['_controller' => \App\Controllers\DialogController::class, '_action' => 'list']),
+    'dialogs_dialog' => new Route('/dialogs/dialog', ['_controller' => \App\Controllers\DialogController::class, '_action' => 'dialog']),
+    'dialogs_create' => new Route('/dialogs/create', ['_controller' => \App\Controllers\DialogController::class, '_action' => 'createDialog']),
+
 ];

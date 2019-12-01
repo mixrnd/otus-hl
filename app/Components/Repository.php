@@ -45,7 +45,12 @@ abstract class Repository
             $query->bindValue(':' . $name, $value);
         }
         $query->execute();
-        //var_dump($query->errorInfo());
+//        var_dump($query->errorInfo());die;
+        return $this->connection()->lastInsertId();
+    }
+
+    public function lastInsertId()
+    {
         return $this->connection()->lastInsertId();
     }
 
@@ -84,5 +89,21 @@ abstract class Repository
     public function setUseReplica(bool $useReplica): void
     {
         $this->useReplica = $useReplica;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectionName(): string
+    {
+        return $this->connectionName;
+    }
+
+    /**
+     * @param string $connectionName
+     */
+    public function setConnectionName(string $connectionName): void
+    {
+        $this->connectionName = $connectionName;
     }
 }

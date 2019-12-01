@@ -23,6 +23,12 @@
                     <a class="nav-link" href="/list">Список</a>
                 </li>
                 <li class="nav-item active">
+                    <a class="nav-link" href="/dialogs/create">Создать диалог</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/dialogs/list">Список диалогов</a>
+                </li>
+                <li class="nav-item active">
                     <a class="nav-link" href="/logout">ВЫХОД</a>
                 </li>
             </ul>

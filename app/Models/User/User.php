@@ -12,6 +12,8 @@ namespace App\Models\User;
 class User
 {
     public $name;
+    public $email;
+    public $gender;
     public $second_name;
     public $age;
     public $interests;

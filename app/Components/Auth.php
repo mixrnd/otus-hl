@@ -9,6 +9,7 @@
 namespace App\Components;
 
 
+use App\Models\User\User;
 use App\Models\User\UserRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -42,7 +43,7 @@ class Auth
         }
     }
 
-    public function getUser()
+    public function getUser() : ?User
     {
         return $this->session->get('auth_user');
     }
