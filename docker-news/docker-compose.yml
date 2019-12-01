@@ -1,0 +1,114 @@
+version: '3'
+services:
+
+  app1:
+    env_file:
+      ./../.env
+    environment:
+      - TT=1
+    build:
+      context: ./php
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./../:/app
+    depends_on:
+      - rabbit
+
+#  app2:
+#    env_file:
+#      ./../.env
+#    environment:
+#      - TT=2
+#    build:
+#      context: ./php
+#      dockerfile: php-fpm.docker
+#    volumes:
+#      - ./../:/app
+#    depends_on:
+#      - rabbit
+#
+#  app3:
+#    env_file:
+#      ./../.env
+#    environment:
+#      - TT=3
+#    build:
+#      context: ./php
+#      dockerfile: php-fpm.docker
+#    volumes:
+#      - ./../:/app
+#    depends_on:
+#      - rabbit
+
+  php-cli:
+    env_file:
+      ./../.env
+    build:
+      context: ./php
+      dockerfile: php-cli.docker
+    volumes:
+      - ./../:/app
+    depends_on:
+      - rabbit
+    tty:
+      true
+
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ./../:/app
+    depends_on:
+      - app1
+#      - app2
+#      - app3
+    ports:
+      - "8080:80"
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"
+#    volumes:
+#      - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
+#  main:
+#    image: mysql:8.0
+#    command: --default-authentication-plugin=mysql_native_password
+#    environment:
+#      MYSQL_DATABASE: social_network
+#      MYSQL_USER: user
+#      MYSQL_PASSWORD: secret
+#      MYSQL_ROOT_PASSWORD: secret
+#    ports:
+#      - "3306:3306"
+#
+#  shard-1:
+#    image: mysql:8.0
+#    command: --default-authentication-plugin=mysql_native_password
+#    environment:
+#      MYSQL_DATABASE: social_network
+#      MYSQL_USER: user
+#      MYSQL_PASSWORD: secret
+#      MYSQL_ROOT_PASSWORD: secret
+#    ports:
+#      - "3307:3306"
+#
+#  shard-2:
+#    image: mysql:8.0
+#    command: --default-authentication-plugin=mysql_native_password
+#    environment:
+#      MYSQL_DATABASE: social_network
+#      MYSQL_USER: user
+#      MYSQL_PASSWORD: secret
+#      MYSQL_ROOT_PASSWORD: secret
+#    ports:
+#      - "3308:3306"

@@ -21,4 +21,5 @@ return [
     'dialogs_dialog' => new Route('/dialogs/dialog', ['_controller' => \App\Controllers\DialogController::class, '_action' => 'dialog']),
     'dialogs_create' => new Route('/dialogs/create', ['_controller' => \App\Controllers\DialogController::class, '_action' => 'createDialog']),
 
+    'rabbit' => new Route('/rabbit', ['_controller' => \App\Controllers\RabbitController::class, '_action' => 'index']),
 ];

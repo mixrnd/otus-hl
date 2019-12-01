@@ -1,0 +1,19 @@
+FROM php:7.3-fpm
+
+COPY ./fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+RUN apt-get update && apt-get install
+
+RUN apt-get install -y \
+        libzip-dev \
+        zip \
+  && docker-php-ext-configure zip --with-libzip \
+  && docker-php-ext-install zip
+
+RUN docker-php-ext-install mbstring tokenizer mysqli pdo_mysql
+RUN docker-php-ext-install bcmath sockets pcntl zip
+
+ADD ./default.ini /usr/local/etc/php/conf.d/default.ini
+
+
+WORKDIR /app
